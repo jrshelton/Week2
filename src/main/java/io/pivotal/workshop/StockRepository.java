@@ -2,7 +2,6 @@ package io.pivotal.workshop;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -33,7 +32,9 @@ public class StockRepository {
     public StockRecord save(NewStockField newStockFields) {
         String newId = randomUUID().toString();
 
-        jdbcTemplate.update(SQL_INSERT, newId, newStockFields.symbol, newStockFields.price, newStockFields.price, newStockFields.date);
+        jdbcTemplate.update(
+                SQL_INSERT, newId, newStockFields.symbol,
+                newStockFields.price, newStockFields.price, newStockFields.date);
 
         return findOne(newId);
     }
@@ -76,5 +77,9 @@ public class StockRepository {
 
         return jdbcTemplate.queryForObject(TOT_VOLUME, new Object[]{symbol, date}, Integer.class);
     }
+
+    //private final String MAX_PRICE = "select Max(price) from Stock where symbol = ? and date = ?";
+    //private final String SQL_QUERY_HIGHEST_PRICE = "select * from Stock where price = ? and symbol = ? and date = ?";
+
 
 }

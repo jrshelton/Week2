@@ -1,10 +1,6 @@
 package io.pivotal.workshop;
 
 
-import java.time.LocalDate;
-import java.util.Date;
-
-
 public class StockRecord {
 
 

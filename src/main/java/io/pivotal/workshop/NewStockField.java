@@ -1,11 +1,6 @@
 package io.pivotal.workshop;
 
-import org.springframework.stereotype.Component;
-
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-
 
 public class NewStockField {
 

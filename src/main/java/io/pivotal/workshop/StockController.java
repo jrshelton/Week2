@@ -72,6 +72,17 @@ public class StockController {
             return -1;
         }
     }
+
+    @GetMapping("/closingprice/{symbol}/{date}")
+    public int closingPrice(@PathVariable() String symbol, @PathVariable() String date){
+        try {
+            //return stockRepository.findClosingPrice(symbol, date);
+        }catch(Exception e){
+            return -1;
+        }
+        return 1;
+    }
+
     @PostMapping
     public ResponseEntity<StockInfo> add(@RequestBody NewStockField newStockFields) {
 
@@ -94,24 +105,21 @@ public class StockController {
 
     private void getData(){
         ObjectMapper mapper = new ObjectMapper();
+
         try {
+
             URL inputStream = new URL("https://bootcamp-training-files.cfapps.io/week2/week2-stocks.json");
-            System.out.println("entered the loop");
             NewStockField[] stocks = mapper.readValue(inputStream, NewStockField[].class);
 
             for(int i = 0; i < 20; i++) {
-
                 stockRepository.save(stocks[i]);
-
             }
 
             System.out.println("Users Saved!");
+
         } catch (IOException e) {
             System.out.println("Unable to save users: " + e.getMessage());
         }
-       }
-
-
-
     }
+}
 

@@ -1,7 +1,5 @@
 package io.pivotal.workshop;
 
-import java.sql.Date;
-
 public class StockInfo {
 
 
