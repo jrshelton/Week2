@@ -5,9 +5,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.net.URI;
+
 import java.net.URL;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class StockController {
     public StockController(StockRepository stockRepository, StockPresenter stockPresenter) {
         this.stockRepository = stockRepository;
         this.stockPresenter = stockPresenter;
+        getData();
 
     }
 
@@ -41,6 +43,35 @@ public class StockController {
         return stockPresenter.present(record);
     }
 
+    @GetMapping("/highest/{symbol}/{date}")
+    public StockInfo highestStock(@PathVariable() String symbol, @PathVariable() String date){
+        try {
+            StockRecord record = stockRepository.findHighest(symbol, date);
+            return stockPresenter.present(record);
+        }catch(Exception e){
+            return new StockInfo(null,null,null,null,null);
+        }
+    }
+
+    @GetMapping("/lowest/{symbol}/{date}")
+    public StockInfo lowestStock(@PathVariable() String symbol, @PathVariable() String date){
+        try {
+            StockRecord record = stockRepository.findLowest(symbol, date);
+
+            return stockPresenter.present(record);
+        }catch(Exception e){
+            return new StockInfo(null,null,null,null,null);
+        }
+    }
+
+    @GetMapping("/totalVolume/{symbol}/{date}")
+    public int totalVolume(@PathVariable() String symbol, @PathVariable() String date){
+        try {
+            return stockRepository.findTotalVolume(symbol, date);
+        }catch(Exception e){
+            return -1;
+        }
+    }
     @PostMapping
     public ResponseEntity<StockInfo> add(@RequestBody NewStockField newStockFields) {
 
@@ -62,28 +93,25 @@ public class StockController {
     }
 
     private void getData(){
-//        ObjectMapper mapper = new ObjectMapper();
-//        NewStockField stocks[];
-//
-//        try {
-//            File data = new File("data.json");
-//
-//            stocks = mapper.readValue(data, NewStockField[].class);
-//
-//            System.out.println(stocks[0].price);
-//            this.add(stocks[0]);
-//
-//           for(int i = 0; i < stocks.length ; i++){
-//               this.add(stocks[i]);
-//            }
-//
-//
-//        } catch (Exception e) {
-//            System.out.println("THIS IS THE ARRAY");
-//            e.printStackTrace();
-//        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            URL inputStream = new URL("https://bootcamp-training-files.cfapps.io/week2/week2-stocks.json");
+            System.out.println("entered the loop");
+            NewStockField[] stocks = mapper.readValue(inputStream, NewStockField[].class);
+
+            for(int i = 0; i < 20; i++) {
+
+                stockRepository.save(stocks[i]);
+
+            }
+
+            System.out.println("Users Saved!");
+        } catch (IOException e) {
+            System.out.println("Unable to save users: " + e.getMessage());
+        }
+       }
 
 
 
     }
-}
+

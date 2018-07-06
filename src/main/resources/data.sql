@@ -1,2 +1,14 @@
-insert into stock (id, symbol, price, volume, date)  values('234', 'msns', 100.23, 200, '2018-06-22');
-insert into stock (id, symbol, price, volume, date)  values('239', 'sns', 100.23, 200,'2018-06-22');
+DROP TABLE IF EXISTS stock;
+
+CREATE TABLE stock
+(
+    id varchar(36) NOT NULL,
+    symbol varchar(200) NOT NULL,
+    price double DEFAULT NULL,
+    volume int NOT NULL,
+    date date ,
+    PRIMARY KEY (id)
+);
+
+
+

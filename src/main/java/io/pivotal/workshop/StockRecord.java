@@ -1,9 +1,12 @@
 package io.pivotal.workshop;
 
+
 import java.time.LocalDate;
 import java.util.Date;
 
+
 public class StockRecord {
+
 
     public final String id;
     public final String symbol;
@@ -18,6 +21,10 @@ public class StockRecord {
         this.volume = volume;
         this.date = date;
     }
+
+
+
+
 
 
 

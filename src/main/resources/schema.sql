@@ -9,3 +9,5 @@ CREATE TABLE stock
     date date ,
     PRIMARY KEY (id)
 );
+
+

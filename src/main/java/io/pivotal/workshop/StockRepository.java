@@ -2,6 +2,7 @@ package io.pivotal.workshop;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -50,4 +51,30 @@ public class StockRepository {
     public StockRecord findOne(String id) {
         return jdbcTemplate.queryForObject(SQL_QUERY_BY_ID, new Object[]{id}, rowMapper);
     }
+
+    private final String MAX_PRICE = "select Max(price) from Stock where symbol = ? and date = ?";
+    private final String SQL_QUERY_HIGHEST_PRICE = "select * from Stock where price = ? and symbol = ? and date = ?";
+
+    public StockRecord findHighest(String symbol, String date){
+
+        double max = jdbcTemplate.queryForObject(MAX_PRICE, new Object[]{symbol, date}, Double.class);
+        return jdbcTemplate.queryForObject(SQL_QUERY_HIGHEST_PRICE, new Object[]{ max, symbol, date}, rowMapper);
+    }
+
+    private final String MIN_PRICE = "select Min(price) from Stock where symbol = ? and date = ?";
+
+    public StockRecord findLowest(String symbol, String date){
+
+        double min = jdbcTemplate.queryForObject(MIN_PRICE, new Object[]{symbol, date}, Double.class);
+        return jdbcTemplate.queryForObject(SQL_QUERY_HIGHEST_PRICE, new Object[]{ min, symbol, date}, rowMapper);
+
+    }
+
+    private final String TOT_VOLUME = "select sum(volume) from stock where symbol = ? and date = ?";
+
+    public int findTotalVolume(String symbol, String date){
+
+        return jdbcTemplate.queryForObject(TOT_VOLUME, new Object[]{symbol, date}, Integer.class);
+    }
+
 }
