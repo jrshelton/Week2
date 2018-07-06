@@ -1,0 +1,2 @@
+insert into stock (id, symbol, price, volume, date)  values('234', 'msns', 100.23, 200, '2018-06-22');
+insert into stock (id, symbol, price, volume, date)  values('239', 'sns', 100.23, 200,'2018-06-22');
