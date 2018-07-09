@@ -43,6 +43,7 @@ public class StockRepository {
     private final String SQL_QUERY_ALL = "select * from Stock";
 
     public List<StockRecord> findAll() {
+
         return jdbcTemplate.query(SQL_QUERY_ALL, rowMapper);
     }
 
@@ -51,6 +52,18 @@ public class StockRepository {
 
     public StockRecord findOne(String id) {
         return jdbcTemplate.queryForObject(SQL_QUERY_BY_ID, new Object[]{id}, rowMapper);
+    }
+
+    private final String SQL_QUERY_BY_DATE = "select * from Stock where date = ?";
+
+    public List<StockRecord> findByDate(String date) {
+        return jdbcTemplate.query(SQL_QUERY_BY_DATE, new Object[]{date}, rowMapper);
+    }
+
+    private final String SQL_QUERY_BY_SYMBOL = "select * from Stock where symbol = ?";
+
+    public List<StockRecord> findBySymbol(String symbol) {
+        return jdbcTemplate.query(SQL_QUERY_BY_SYMBOL, new Object[]{symbol}, rowMapper);
     }
 
     private final String MAX_PRICE = "select Max(price) from Stock where symbol = ? and date = ?";
@@ -78,8 +91,15 @@ public class StockRepository {
         return jdbcTemplate.queryForObject(TOT_VOLUME, new Object[]{symbol, date}, Integer.class);
     }
 
-    //private final String MAX_PRICE = "select Max(price) from Stock where symbol = ? and date = ?";
-    //private final String SQL_QUERY_HIGHEST_PRICE = "select * from Stock where price = ? and symbol = ? and date = ?";
+    private final String MAX_DATE = "select Max(date) from Stock where symbol = ? and date = ? and ROWNUM < 2";
+    private final String SQL_QUERY_HIGHEST_DATE = "select price from Stock where symbol = ? and date = ? and ROWNUM < 2";
+
+    public int closingPrice(String symbol, String date){
+
+        Date day = jdbcTemplate.queryForObject(MAX_DATE, new Object[]{symbol, date}, java.sql.Date.class);
+        return jdbcTemplate.queryForObject(SQL_QUERY_HIGHEST_DATE, new Object[]{ symbol, day}, Integer.class);
+
+    }
 
 
 }

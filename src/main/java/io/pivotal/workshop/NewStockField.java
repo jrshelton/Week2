@@ -1,6 +1,6 @@
 package io.pivotal.workshop;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class NewStockField {
 

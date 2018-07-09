@@ -15,7 +15,7 @@ public class StockPresenter {
                 record.symbol,
                 record.price + "",
                 record.volume + "",
-                formatter.format(record.date)
+                record.date.toString()
 
         );
     }

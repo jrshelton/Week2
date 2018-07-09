@@ -43,6 +43,20 @@ public class StockController {
         return stockPresenter.present(record);
     }
 
+    @GetMapping("/date/{date}")
+    public List<StockInfo> findByDate(@PathVariable() String date) {
+        List<StockRecord> record = stockRepository.findByDate(date);
+        return record.stream().map(stockPresenter::present)
+                .collect(toList());
+    }
+
+    @GetMapping("/symbol/{symbol}")
+    public List<StockInfo> findBySymbol(@PathVariable() String symbol) {
+        List<StockRecord> record = stockRepository.findBySymbol(symbol);
+        return record.stream().map(stockPresenter::present)
+                .collect(toList());
+    }
+
     @GetMapping("/highest/{symbol}/{date}")
     public StockInfo highestStock(@PathVariable() String symbol, @PathVariable() String date){
         try {
@@ -57,8 +71,8 @@ public class StockController {
     public StockInfo lowestStock(@PathVariable() String symbol, @PathVariable() String date){
         try {
             StockRecord record = stockRepository.findLowest(symbol, date);
-
             return stockPresenter.present(record);
+
         }catch(Exception e){
             return new StockInfo(null,null,null,null,null);
         }
@@ -73,14 +87,14 @@ public class StockController {
         }
     }
 
-    @GetMapping("/closingprice/{symbol}/{date}")
+    @GetMapping("/closingPrice/{symbol}/{date}")
     public int closingPrice(@PathVariable() String symbol, @PathVariable() String date){
         try {
-            //return stockRepository.findClosingPrice(symbol, date);
-        }catch(Exception e){
+            return stockRepository.closingPrice(symbol, date);
+       }catch(Exception e){
             return -1;
-        }
-        return 1;
+       }
+
     }
 
     @PostMapping
@@ -111,11 +125,12 @@ public class StockController {
             URL inputStream = new URL("https://bootcamp-training-files.cfapps.io/week2/week2-stocks.json");
             NewStockField[] stocks = mapper.readValue(inputStream, NewStockField[].class);
 
-            for(int i = 0; i < 20; i++) {
+            for(int i = 0; i < stocks.length; i++) {
                 stockRepository.save(stocks[i]);
             }
 
             System.out.println("Users Saved!");
+            System.out.println(stocks[0].date.getTime());
 
         } catch (IOException e) {
             System.out.println("Unable to save users: " + e.getMessage());
